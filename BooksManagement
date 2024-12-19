@@ -1,0 +1,81 @@
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
+import java.sql.*;
+
+public class BooksManagement extends JFrame {
+    private JTextField titleField, authorField;
+    private JButton addButton, removeButton;
+
+    public BooksManagement() {
+        setTitle("Books Management");
+        setLayout(new FlowLayout());
+        
+        JLabel titleLabel = new JLabel("Book Title:");
+        titleField = new JTextField(20);
+        
+        JLabel authorLabel = new JLabel("Author:");
+        authorField = new JTextField(20);
+        
+        addButton = new JButton("Add Book");
+        removeButton = new JButton("Remove Book");
+        
+        add(titleLabel);
+        add(titleField);
+        add(authorLabel);
+        add(authorField);
+        add(addButton);
+        add(removeButton);
+        
+        addButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                addBook();
+            }
+        });
+        
+        removeButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                removeBook();
+            }
+        });
+        
+        setSize(300, 200);
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        setLocationRelativeTo(null);
+        setVisible(true);
+    }
+
+    private void addBook() {
+        String title = titleField.getText();
+        String author = authorField.getText();
+        try (Connection connection = DatabaseConnection.getConnection()) {
+            String query = "INSERT INTO books (title, author) VALUES (?, ?)";
+            PreparedStatement stmt = connection.prepareStatement(query);
+            stmt.setString(1, title);
+            stmt.setString(2, author);
+            stmt.executeUpdate();
+            JOptionPane.showMessageDialog(null, "Book Added Successfully");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void removeBook() {
+        String title = titleField.getText();
+        try (Connection connection = DatabaseConnection.getConnection()) {
+            String query = "DELETE FROM books WHERE title = ?";
+            PreparedStatement stmt = connection.prepareStatement(query);
+            stmt.setString(1, title);
+            stmt.executeUpdate();
+            JOptionPane.showMessageDialog(null, "Book Removed Successfully");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void main(String[] args) {
+        new BooksManagement();
+    }
+}

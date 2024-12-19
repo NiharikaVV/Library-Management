@@ -1,0 +1,39 @@
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
+
+public class MainMenu extends JFrame {
+    public MainMenu() {
+        setTitle("Library Management System");
+        setLayout(new FlowLayout());
+        
+        JButton booksButton = new JButton("Manage Books");
+        JButton staffButton = new JButton("Manage Staff");
+        
+        booksButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                new BooksManagement();
+            }
+        });
+        
+        staffButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                new StaffManagement();
+            }
+        });
+        
+        add(booksButton);
+        add(staffButton);
+        
+        setSize(300, 200);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setLocationRelativeTo(null);
+        setVisible(true);
+    }
+    
+    public static void main(String[] args) {
+        new MainMenu();
+    }
+}
